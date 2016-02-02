@@ -1,0 +1,49 @@
+body
+{
+    margin: 40px;
+}
+
+
+.csv-form
+{
+    width: 500px;
+}
+
+.form-control
+{
+    width: 200px;
+    float: left;
+}
+
+.btn-primary
+{
+    margin-left: 5px;
+}
+
+
+
+thead td
+{
+    font-size: 1.1em;
+    font-weight: bolder;
+}
+
+.downloadLink
+{
+    float: right;
+    line-height: 32px;
+}
+
+.paging
+{
+    display: inline-table;
+}
+
+
+.short
+{
+    width: 60px;
+}
+
+
+

@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Yelp Utility</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
+
+    <!-- Latest compiled and minified CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+
+    <!-- Optional theme -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+
+    <link rel="stylesheet" type="text/css" href="/public/main.css">
+    <script src="/public/main.js"></script>
+
+
+</head>
+<body>
+
+    <div class="csv-form">
+        <h4>Create New Yelp Page</h4>
+        <hr>
+        <input type="text" class="form-control" id="store_name" placeholder="Type in Yelp Business"> <button class="btn btn-primary" id="btn_createStore">Create</button>
+    </div>
+
+
+    <table class="table table-striped table-bordered" id="twitter_table_data">
+        <thead>
+            <td>Company Name</td>
+            <td>Location</td>
+            <td>URL to Yelp Reviews</td>
+            <td>Pick Up</td>
+            <td>Appointment</td>
+            <td>Device is Broken, Cracked or Not Working</td>
+            <td>Making a Return</td>
+            <td>Change, Update or Upgrade</td>
+            <td>Switching to Verizon or Away from Verizon</td>
+            <td>Making a Purchase</td>
+            <td>Ask a Question</td>
+            <td>Positive Other</td>
+            <td>Positive</td>
+            <td>Neutral</td>
+            <td>Negative</td>
+            <td>Knowledgeable staff</td>
+            <td>Friendly and positive</td>
+            <td>Going above and beyond</td>
+            <td>Quick Price</td>
+            <td>Good price</td>
+            <td>Positive Review Other</td>
+            <td>Not knowledgable staff</td>
+            <td>Rude staff</td>
+            <td>Staff were lazy or ignored them</td>
+            <td>Long wait</td>
+            <td>Inaccurate information on cost, bills or rates</td>
+            <td>Pushy sales</td>
+            <td>Store doesn't answer phone</td>
+            <td>Negative Other</td>
+            <td>Additional Notes</td>
+
+        </thead>
+        <tbody>
+        <td><input type="text" class="form-control long" name="Company Name" id="company_name"/></td>
+        <td><input type="text" class="form-control long" name="Location"/></td>
+        <td><input type="text" class="form-control long" name=""/></td>
+        <td><input type="text" class="form-control short" name=""/></td>
+        <td><input type="text" class="form-control short" name=""/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><input type="text" class="form-control short" name="test"/></td>
+        <td><textarea name="test" id="" cols="30" rows="10"></textarea></td>
+
+        </tbody>
+        <tfoot>
+            <td colspan="30"><button class="btn btn-primary" id="btn_save">Save</button>  <div class="downloadLink" ><a href="/downloads" target="_blank">Click to Download CSV</a></div></td>
+        </tfoot>
+    </table>
+
+</body>
+</html>
