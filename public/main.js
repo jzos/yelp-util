@@ -70,16 +70,16 @@
 
                 });
 
-                /*
-                $(this).find('td option:selected').each(function () {
 
-                    var title = $(this).parent().attr("name");
+                $(this).find('td textarea').each(function () {
+
+                    var title = $(this).attr("name");
                     var value = $(this).val();
 
                     jsonTemp[title] = value;
 
                 });
-                */
+
 
                 arrayResult.push(jsonTemp);
 

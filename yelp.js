@@ -56,20 +56,21 @@ app.post('/exportCSV', function (req, res) {
     req.on('end', function() {
         var csv = JSON.parse(body);
 
+        var sCSVFilename = csv[0]["Company Name"];
+
+        sCSVFilename = sCSVFilename.replace(/['|\s]/g,"");
+
+        console.log("File Name : " + sCSVFilename);
 
         function json2csvCallback(err, csv) {
             if (err) throw err;
 
             // Save CSV File
 
-            var sCSVFilename = sFileName + (iPageNo-1);
-
-            console.log("Filename : " + sCSVFilename);
-
             fs.writeFile('downloads/' + sCSVFilename + '.csv', csv, function(err) {
                 if (err) throw err;
                 console.log('file saved');
-                res.send("OK 200");
+                res.send("File Saved");
             });
 
         };
