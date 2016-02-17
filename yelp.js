@@ -16,8 +16,8 @@ var jsonexport          = require('jsonexport');
 var fs                  = require('fs');
 var converter           = require('json-2-csv');
 var csv                 = require("fast-csv");
-var Twitter             = require('twitter');
 var serveIndex          = require('serve-index');
+var yelp                = require("node-yelp");
 
 
 var sFileName                   = "";
@@ -32,10 +32,11 @@ var iTotalPages;
 var objTwitterData              = null;
 
 
+var iArrayCount                 = 0;
+var arrayYelp                   = [];
 
 
 app.use('/downloads', serveIndex(__dirname + '/downloads'));
-
 
 
 app.get('/',function(req,res){
@@ -44,51 +45,149 @@ app.get('/',function(req,res){
 });
 
 
+function LoadCSV()
+{
 
-app.post('/exportCSV', function (req, res) {
+    arrayUsers = [];
 
-    var body = '';
+    csv
+        .fromPath("stores/" + "la_att" + ".csv")
+        .on("data", function(data){
 
-    req.on('data', function(chunk) {
-        body += chunk;
+            var objTemp = {};
+
+            objTemp["name"]     = data[1];
+            objTemp["lat"]      = data[5];
+            objTemp["long"]     = data[6];
+
+            arrayUsers.push(objTemp);
+            //searchYelp(data[1], data[5], data[6]);
+
+        })
+        .on("end", function(){
+
+            //iTotalPages =  Math.ceil(arrayUsers.length/100);
+
+            startSearch();
+        });
+}
+
+
+
+function searchYelp(name, lat, long)
+{
+
+    var client = yelp.createClient({
+        oauth: {
+            "consumer_key": "PnQ_UsmEZLiZBFvd5KW44Q",
+            "consumer_secret": "EdAYCxdW3lGbl5AEb_qp7c52pH0",
+            "token": "Yz0DLIQnUeS3Bg0Qr66eT4vzUx-p_SV2",
+            "token_secret": "PPquzkAQ9qnOm-D36sE_rSkOlMk"
+        },
+
+        // Optional settings:
+        httpClient: {
+            maxSockets: 25  // ~> Default is 10
+        }
     });
 
-    req.on('end', function() {
-        var csv = JSON.parse(body);
 
-        var sCSVFilename = csv[0]["Company Name"];
+    client.search({
+        term: name,
+        //location: "long beach",
+        ll: lat + "," + long,
+        radius_filter: 1000
+    }).then(function (data) {
 
-        sCSVFilename = sCSVFilename.replace(/['|\s]/g,"");
+        var businesses = data.businesses;
+        var objTemp1 = {};
 
-        console.log("File Name : " + sCSVFilename);
+        for (var e in businesses)
+        {
+            if (businesses[e].name.toLowerCase().indexOf(name.toLowerCase()) != -1)
+            {
 
-        function json2csvCallback(err, csv) {
-            if (err) throw err;
+                objTemp1["url"]         = businesses[e].url;
+                objTemp1["name"]        = name;
+                objTemp1["lat"]         = lat;
+                objTemp1["long"]        = long;
 
-            // Save CSV File
+                arrayYelp.push(objTemp1);
+            }
+        }
 
-            fs.writeFile('downloads/' + sCSVFilename + '.csv', csv, function(err) {
-                if (err) throw err;
-                console.log('file saved');
-                res.send("File Saved");
-            });
+        if (iArrayCount < arrayUsers.length)
+        {
+            startSearch();
+        }
+        else
+        {
+            console.log(arrayYelp);
+        }
 
-        };
 
-        converter.json2csv(csv, json2csvCallback);
 
+
+    }).catch(function (err) {
+
+        objTemp1 = {};
+        objTemp1["url"]      = "N/A";
+        objTemp1["name"]     = name;
+        objTemp1["lat"]      = lat;
+        objTemp1["long"]     = long;
+
+
+        arrayYelp.push(objTemp1);
+
+
+        console.log(err);
+
+        if (iArrayCount < arrayUsers.length)
+        {
+            startSearch();
+        }
+        else
+        {
+            console.log(arrayYelp);
+        }
+
+
+        if (err.type === yelp.errorTypes.areaTooLarge) {
+            // ..
+        } else if (err.type === yelp.errorTypes.unavailableForLocation) {
+            // ..
+        }
     });
+}
 
-});
 
 
+function startSearch(){
+
+    searchYelp(arrayUsers[iArrayCount].name,arrayUsers[iArrayCount].lat, arrayUsers[iArrayCount].long);
+
+    console.log(iArrayCount);
+
+    iArrayCount += 1;
+
+
+}
 
 
 
 app.use('/public', express.static(__dirname + '/public'));
-app.use('/downloads', express.static(__dirname + '/downloads'));
+app.use('/stores', express.static(__dirname + '/stores'));
 
 app.listen(process.env.PORT || 5005);
 
 console.log("Running at Port 5005");
+
+
+
+
+//LoadCSV();
+
+
+
+
 

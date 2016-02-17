@@ -17,7 +17,7 @@
     "json-2-csv": "2.0.12",
     "winston" : "2.1.1",
     "fast-csv": "1.0.0",
-    "twitter" : "1.2.5",
+    "node-yelp" : "0.0.3",
     "serve-index" : "1.7.3"
   },
   "keywords": [
