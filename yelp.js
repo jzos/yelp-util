@@ -32,7 +32,7 @@ var iTotalPages;
 var objTwitterData              = null;
 
 
-var iArrayCount                 = 0;
+var iArrayCount                 = 1;
 var arrayYelp                   = [];
 
 
@@ -51,22 +51,22 @@ function LoadCSV()
     arrayUsers = [];
 
     csv
-        .fromPath("stores/" + "la_att" + ".csv")
+        .fromPath("stores/" + "verizon_la_stores" + ".csv")
         .on("data", function(data){
 
             var objTemp = {};
 
             objTemp["name"]     = data[1];
-            objTemp["lat"]      = data[5];
-            objTemp["long"]     = data[6];
+            objTemp["address"]  = data[0].split(",").join(" ") + " " + data[1] + " " + data[10];
+            //objTemp["address"]  = data[2].split(",").join(" ");
+            objTemp["lat"]      = data[3];
+            objTemp["long"]     = data[4];
 
             arrayUsers.push(objTemp);
-            //searchYelp(data[1], data[5], data[6]);
 
         })
         .on("end", function(){
 
-            //iTotalPages =  Math.ceil(arrayUsers.length/100);
 
             startSearch();
         });
@@ -74,7 +74,7 @@ function LoadCSV()
 
 
 
-function searchYelp(name, lat, long)
+function searchYelp(name, address, lat, long)
 {
 
     var client = yelp.createClient({
@@ -91,30 +91,45 @@ function searchYelp(name, lat, long)
         }
     });
 
+    console.log("Address: " + address);
 
     client.search({
-        term: name,
-        //location: "long beach",
-        ll: lat + "," + long,
+        term: "verizon",
+        location: address,
+        //ll: lat + "," + long,
         radius_filter: 1000
     }).then(function (data) {
+
+        console.log(iArrayCount);
 
         var businesses = data.businesses;
         var objTemp1 = {};
 
+        var booleanBreak = false;
+
+        objTemp1["name"]        = name;
+        objTemp1["address"]     = address;
+        objTemp1["lat"]         = lat;
+        objTemp1["long"]        = long;
+        objTemp1["url"]         = "N/A";
+
         for (var e in businesses)
         {
-            if (businesses[e].name.toLowerCase().indexOf(name.toLowerCase()) != -1)
+
+            if (businesses[e].name.toLowerCase().indexOf("verizon") != -1 && businesses[e].location.address[0].indexOf(address.substr(0,5)) != -1)
             {
-
+                console.log(businesses[e].location.address[0]);
                 objTemp1["url"]         = businesses[e].url;
-                objTemp1["name"]        = name;
-                objTemp1["lat"]         = lat;
-                objTemp1["long"]        = long;
 
-                arrayYelp.push(objTemp1);
             }
+
         }
+
+
+
+
+        arrayYelp.push(objTemp1);
+
 
         if (iArrayCount < arrayUsers.length)
         {
@@ -122,7 +137,7 @@ function searchYelp(name, lat, long)
         }
         else
         {
-            console.log(arrayYelp);
+            exportCSV(arrayYelp);
         }
 
 
@@ -130,14 +145,6 @@ function searchYelp(name, lat, long)
 
     }).catch(function (err) {
 
-        objTemp1 = {};
-        objTemp1["url"]      = "N/A";
-        objTemp1["name"]     = name;
-        objTemp1["lat"]      = lat;
-        objTemp1["long"]     = long;
-
-
-        arrayYelp.push(objTemp1);
 
 
         console.log(err);
@@ -148,7 +155,7 @@ function searchYelp(name, lat, long)
         }
         else
         {
-            console.log(arrayYelp);
+            exportCSV(arrayYelp);
         }
 
 
@@ -164,12 +171,33 @@ function searchYelp(name, lat, long)
 
 function startSearch(){
 
-    searchYelp(arrayUsers[iArrayCount].name,arrayUsers[iArrayCount].lat, arrayUsers[iArrayCount].long);
+    searchYelp(arrayUsers[iArrayCount].name,arrayUsers[iArrayCount].address, arrayUsers[iArrayCount].lat, arrayUsers[iArrayCount].long);
 
-    console.log(iArrayCount);
 
     iArrayCount += 1;
 
+
+}
+
+
+function exportCSV(data){
+
+    var csv = data;
+
+
+    function json2csvCallback(err, csv) {
+        if (err) throw err;
+
+        // Save CSV File
+
+        fs.writeFile('downloads/' + "verizon_la_stores" + '.csv', csv, function(err) {
+            if (err) throw err;
+            console.log('file saved');
+        });
+
+    };
+
+    converter.json2csv(csv, json2csvCallback);
 
 }
 
@@ -185,7 +213,7 @@ console.log("Running at Port 5005");
 
 
 
-//LoadCSV();
+LoadCSV();
 
 
 
