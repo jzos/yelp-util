@@ -5,7 +5,7 @@
 
 /****
  *
-  * Todo : Rewrite the code using sails.js in MVC
+ * Todo : Rewrite the code using sails.js in MVC
  */
 
 
@@ -20,19 +20,7 @@ var serveIndex          = require('serve-index');
 var yelp                = require("node-yelp");
 
 
-var sFileName                   = "";
-var iCheckTwitterData;
-var csvFile;
 var arrayUsers                  = [];
-var arrayImages                 = [];
-var arrayUsersData              = [];
-var arrayUserTwitterData        = [];
-var iPageNo;
-var iTotalPages;
-var objTwitterData              = null;
-
-
-var iArrayCount                 = 1;
 var arrayYelp                   = [];
 
 
@@ -67,7 +55,6 @@ function LoadCSV()
         })
         .on("end", function(){
 
-
             startSearch();
         });
 }
@@ -91,8 +78,6 @@ function searchYelp(name, address, lat, long)
         }
     });
 
-    console.log("Address: " + address);
-
     client.search({
         term: "verizon",
         location: address,
@@ -100,12 +85,8 @@ function searchYelp(name, address, lat, long)
         radius_filter: 1000
     }).then(function (data) {
 
-        console.log(iArrayCount);
-
         var businesses = data.businesses;
         var objTemp1 = {};
-
-        var booleanBreak = false;
 
         objTemp1["name"]        = name;
         objTemp1["address"]     = address;
@@ -126,38 +107,18 @@ function searchYelp(name, address, lat, long)
         }
 
 
-
-
         arrayYelp.push(objTemp1);
 
-
-        if (iArrayCount < arrayUsers.length)
-        {
-            startSearch();
-        }
-        else
+        if ((arrayYelp.length + 1) == arrayUsers.length)
         {
             exportCSV(arrayYelp);
         }
-
 
 
 
     }).catch(function (err) {
 
-
-
         console.log(err);
-
-        if (iArrayCount < arrayUsers.length)
-        {
-            startSearch();
-        }
-        else
-        {
-            exportCSV(arrayYelp);
-        }
-
 
         if (err.type === yelp.errorTypes.areaTooLarge) {
             // ..
@@ -171,19 +132,17 @@ function searchYelp(name, address, lat, long)
 
 function startSearch(){
 
-    searchYelp(arrayUsers[iArrayCount].name,arrayUsers[iArrayCount].address, arrayUsers[iArrayCount].lat, arrayUsers[iArrayCount].long);
+    for (var a in arrayUsers)
+    {
+        searchYelp(arrayUsers[a].name,arrayUsers[a].address, arrayUsers[a].lat, arrayUsers[a].long);
 
-
-    iArrayCount += 1;
-
-
+    }
 }
 
 
 function exportCSV(data){
 
     var csv = data;
-
 
     function json2csvCallback(err, csv) {
         if (err) throw err;
